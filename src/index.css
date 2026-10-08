@@ -1,0 +1,74 @@
+:root {
+  --bg: #fff8f0;
+  --text: #2b2118;
+  --muted: #7a6a5c;
+  --accent: #e63946;
+  --accent-text: #fff;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1512;
+    --text: #f5ece3;
+    --muted: #a8988a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+h1 { margin: 0; font-size: 2.5rem; }
+.subtitle { margin: 0; color: var(--muted); }
+
+.count {
+  font-size: clamp(6rem, 30vw, 10rem);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+button { font: inherit; cursor: pointer; border-radius: 1rem; }
+button:disabled { opacity: 0.5; cursor: default; }
+
+.bump {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 2rem;
+  font-weight: 800;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.bump:active:not(:disabled) { transform: scale(0.97); }
+
+.undo {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--muted);
+  background: transparent;
+  color: var(--muted);
+}
+
+.error { color: var(--accent); }
