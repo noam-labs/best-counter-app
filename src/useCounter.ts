@@ -52,5 +52,23 @@ export function useCounter(client: SupabaseClient, counterId = COUNTER_ID) {
     [client, counterId],
   )
 
-  return { value, error, increment: () => bump(1), decrement: () => bump(-1) }
+  const claim = useCallback(
+    async (prizeId: string) => {
+      const { data, error } = await client.rpc('claim_prize', { counter_id: counterId, prize_id: prizeId })
+      if (error) {
+        setError(error.message)
+        return false
+      }
+      if (data === null) {
+        setError('Pas assez de points pour ce lot')
+        return false
+      }
+      setError(null)
+      setValue(Number(data))
+      return true
+    },
+    [client, counterId],
+  )
+
+  return { value, error, increment: () => bump(1), decrement: () => bump(-1), claim }
 }

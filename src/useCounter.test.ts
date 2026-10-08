@@ -80,3 +80,35 @@ describe('useCounter', () => {
     expect(raw.removeChannel).toHaveBeenCalledOnce()
   })
 })
+
+describe('useCounter.claim', () => {
+  it('claims a prize via claim_prize and takes the new value', async () => {
+    const { client, raw } = mockClient(120, { data: 20, error: null })
+    const { result } = renderHook(() => useCounter(client))
+    await waitFor(() => expect(result.current.value).toBe(120))
+
+    let ok = false
+    await act(async () => {
+      ok = await result.current.claim('repas')
+    })
+
+    expect(raw.rpc).toHaveBeenCalledWith('claim_prize', { counter_id: 'family', prize_id: 'repas' })
+    expect(ok).toBe(true)
+    expect(result.current.value).toBe(20)
+  })
+
+  it('reports not enough points when the server refuses', async () => {
+    const { client } = mockClient(10, { data: null, error: null })
+    const { result } = renderHook(() => useCounter(client))
+    await waitFor(() => expect(result.current.value).toBe(10))
+
+    let ok = true
+    await act(async () => {
+      ok = await result.current.claim('repas')
+    })
+
+    expect(ok).toBe(false)
+    expect(result.current.value).toBe(10)
+    expect(result.current.error).toBe('Pas assez de points pour ce lot')
+  })
+})
